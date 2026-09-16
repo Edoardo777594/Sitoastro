@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dipartimento di Astrofisica · Università di Cassiopea</title>
+<meta name="description" content="Dipartimento di Astrofisica dell'Università di Cassiopea: ricerca, persone, pubblicazioni e seminari.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔭</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <span class="brand-mark">α</span>
+      <span>
+        Dipartimento di Astrofisica
+        <small>Università di Cassiopea</small>
+      </span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="#ricerca">Ricerca</a>
+      <a href="#numeri">Il dipartimento</a>
+      <a href="#persone">Persone</a>
+      <a href="#pubblicazioni">Pubblicazioni</a>
+      <a href="#seminari">Seminari</a>
+      <a href="#contatti">Contatti</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Apri il menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <canvas id="starfield" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div>
+        <p class="hero-eyebrow">λ 400–700 nm e oltre</p>
+        <h1>Studiamo l'universo dalle sue prime luci fino a oggi.</h1>
+        <p class="lede">Ricerca teorica e osservativa in astrofisica, cosmologia e onde gravitazionali. Gestiamo strumentazione propria e collaboriamo con le principali survey internazionali.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#ricerca">Scopri la ricerca</a>
+          <a class="btn btn-secondary" href="#contatti">Dottorato e tesi</a>
+        </div>
+      </div>
+      <div class="hero-diagram" aria-hidden="true">
+        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(232,235,246,0.14)" stroke-width="1"/>
+          <ellipse cx="200" cy="200" rx="150" ry="58" fill="none" stroke="rgba(92,211,207,0.35)" stroke-width="1"/>
+          <ellipse cx="200" cy="200" rx="150" ry="58" fill="none" stroke="rgba(231,163,57,0.28)" stroke-width="1" transform="rotate(55 200 200)"/>
+          <ellipse cx="200" cy="200" rx="150" ry="58" fill="none" stroke="rgba(143,128,230,0.28)" stroke-width="1" transform="rotate(115 200 200)"/>
+          <circle cx="200" cy="200" r="14" fill="#e7a339"/>
+          <circle cx="200" cy="200" r="14" fill="#e7a339" opacity="0.35">
+            <animate attributeName="r" values="14;24;14" dur="6s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.35;0;0.35" dur="6s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="350" cy="200" r="5" fill="#5cd3cf"/>
+          <circle cx="107" cy="142" r="3.5" fill="#8f80e6"/>
+          <circle cx="115" cy="270" r="4" fill="#dd6672"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RICERCA ============ -->
+  <section id="ricerca">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="index">01</span>
+        <div>
+          <h2>Sei gruppi, un solo cielo</h2>
+          <p class="desc">Ogni gruppo di ricerca è indicato con la banda dello spettro elettromagnetico — o il canale osservativo — in cui lavora prevalentemente.</p>
+        </div>
+      </div>
+
+      <div class="research-list">
+        <div class="research-item">
+          <span class="band-tag"><span class="band-dot" style="background:#8f80e6"></span>fondo cosmico a microonde</span>
+          <div>
+            <h3>Cosmologia e struttura su grande scala</h3>
+            <p>Formazione ed evoluzione delle strutture cosmiche, energia oscura, anisotropie del fondo cosmico. Simulazioni numeriche su cluster HPC condivisi con l'ateneo.</p>
+          </div>
+          <span class="lead-name">Coord. prof.ssa Elena Marchetti</span>
+        </div>
+
+        <div class="research-item">
+          <span class="band-tag"><span class="band-dot" style="background:#5cd3cf"></span>raggi X e gamma</span>
+          <div>
+            <h3>Astrofisica delle alte energie</h3>
+            <p>Nuclei galattici attivi, resti di supernova, sorgenti binarie compatte. Analisi di dati da missioni spaziali e sviluppo di pipeline di riduzione dati.</p>
+          </div>
+          <span class="lead-name">Coord. prof. Davide Ferraro</span>
+        </div>
+
+        <div class="research-item">
+          <span class="band-tag"><span class="band-dot" style="background:#e8ebf6"></span>interferometria laser</span>
+          <div>
+            <h3>Onde gravitazionali</h3>
+            <p>Modelli di sorgente per la fusione di oggetti compatti, ricerca di controparti elettromagnetiche, contributi metodologici alle collaborazioni internazionali.</p>
+          </div>
+          <span class="lead-name">Coord. prof.ssa Giulia Contarini</span>
+        </div>
+
+        <div class="research-item">
+          <span class="band-tag"><span class="band-dot" style="background:#e08a3c"></span>infrarosso</span>
+          <div>
+            <h3>Pianeti extrasolari e dischi protoplanetari</h3>
+            <p>Rilevamento e caratterizzazione di esopianeti, formazione planetaria, spettroscopia di atmosfere. Programmi osservativi da terra e supporto a missioni spaziali dedicate.</p>
+          </div>
+          <span class="lead-name">Coord. prof. Marco Terenzi</span>
+        </div>
+
+        <div class="research-item">
+          <span class="band-tag"><span class="band-dot" style="background:#e7a339"></span>visibile</span>
+          <div>
+            <h3>Astrofisica stellare</h3>
+            <p>Struttura ed evoluzione stellare, ammassi globulari, asterosismologia. Utilizzo di dati fotometrici e spettroscopici ad alta risoluzione.</p>
+          </div>
+          <span class="lead-name">Coord. prof.ssa Alice Bruno</span>
+        </div>
+
+        <div class="research-item">
+          <span class="band-tag"><span class="band-dot" style="background:#dd6672"></span>radio</span>
+          <div>
+            <h3>Radioastronomia</h3>
+            <p>Mezzo interstellare, pulsar, survey a bassa frequenza. Collaborazioni con array radio internazionali per osservazioni multi-sito.</p>
+          </div>
+          <span class="lead-name">Coord. prof. Simone Valli</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IL DIPARTIMENTO / NUMERI ============ -->
+  <section id="numeri">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="index">02</span>
+        <div>
+          <h2>Il dipartimento</h2>
+          <p class="desc">Una comunità di ricerca di dimensioni contenute, con accesso diretto a strumentazione osservativa e capacità di calcolo condivisa.</p>
+        </div>
+      </div>
+
+      <div class="figures">
+        <div class="prose">
+          <p>Il dipartimento riunisce <strong>docenti, ricercatori e dottorandi</strong> impegnati in sei linee di ricerca che spaziano dalla cosmologia teorica all'osservazione diretta del cielo. Condividiamo laboratori di strumentazione, un cluster di calcolo dedicato e una biblioteca specialistica con l'ateneo.</p>
+          <p>Gestiamo direttamente due telescopi presso l'osservatorio didattico dell'ateneo e partecipiamo come partner a tre collaborazioni internazionali per l'accesso a strumentazione di classe maggiore.</p>
+          <p>Il dottorato in Astrofisica e Cosmologia accoglie ogni anno un numero limitato di nuovi dottorandi, con borse finanziate su progetti di ricerca attivi.</p>
+        </div>
+        <div class="margin-notes">
+          <div class="margin-note">
+            <span class="num">37</span>
+            <span class="label">tra docenti, ricercatori e assegnisti</span>
+          </div>
+          <div class="margin-note">
+            <span class="num">14</span>
+            <span class="label">dottorande e dottorandi</span>
+          </div>
+          <div class="margin-note">
+            <span class="num">2</span>
+            <span class="label">telescopi gestiti direttamente</span>
+          </div>
+          <div class="margin-note">
+            <span class="num">62</span>
+            <span class="label">pubblicazioni su riviste referate nel 2025</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PERSONE ============ -->
+  <section id="persone">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="index">03</span>
+        <div>
+          <h2>Persone</h2>
+          <p class="desc">Un estratto del corpo docente. L'elenco completo, con pagine individuali e recapiti, è disponibile su richiesta del dipartimento.</p>
+        </div>
+      </div>
+
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="avatar" style="background:#8f80e6">EM</div>
+          <h3>Elena Marchetti</h3>
+          <p class="role">Professoressa ordinaria</p>
+          <p class="area">cosmologia</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#5cd3cf">DF</div>
+          <h3>Davide Ferraro</h3>
+          <p class="role">Professore associato</p>
+          <p class="area">alte energie</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#e8ebf6">GC</div>
+          <h3>Giulia Contarini</h3>
+          <p class="role">Professoressa associata</p>
+          <p class="area">onde gravitazionali</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#e08a3c">MT</div>
+          <h3>Marco Terenzi</h3>
+          <p class="role">Ricercatore</p>
+          <p class="area">esopianeti</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#e7a339">AB</div>
+          <h3>Alice Bruno</h3>
+          <p class="role">Professoressa associata</p>
+          <p class="area">astrofisica stellare</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#dd6672">SV</div>
+          <h3>Simone Valli</h3>
+          <p class="role">Ricercatore</p>
+          <p class="area">radioastronomia</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#5cd3cf">LR</div>
+          <h3>Luca Rinaldi</h3>
+          <p class="role">Assegnista di ricerca</p>
+          <p class="area">alte energie</p>
+        </div>
+        <div class="person-card">
+          <div class="avatar" style="background:#8f80e6">FS</div>
+          <h3>Federica Sala</h3>
+          <p class="role">Dottoranda</p>
+          <p class="area">cosmologia</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PUBBLICAZIONI ============ -->
+  <section id="pubblicazioni">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="index">04</span>
+        <div>
+          <h2>Pubblicazioni recenti</h2>
+          <p class="desc">Una selezione di lavori usciti negli ultimi mesi. L'elenco completo è mantenuto sugli archivi bibliografici dell'ateneo.</p>
+        </div>
+      </div>
+
+      <div class="pub-list">
+        <div class="pub-item">
+          <span class="year">2026</span>
+          <div>
+            <h3>Vincoli sull'equazione di stato dell'energia oscura da survey combinate di lensing debole</h3>
+            <p class="authors">Marchetti, E.; Sala, F.; et al.</p>
+            <p class="meta">Astronomy &amp; Astrophysics · arXiv:2026.04471</p>
+          </div>
+        </div>
+        <div class="pub-item">
+          <span class="year">2026</span>
+          <div>
+            <h3>Variabilità a raggi X di nuclei galattici attivi in un campione di sorgenti a basso redshift</h3>
+            <p class="authors">Ferraro, D.; Rinaldi, L.</p>
+            <p class="meta">The Astrophysical Journal · arXiv:2026.01123</p>
+          </div>
+        </div>
+        <div class="pub-item">
+          <span class="year">2025</span>
+          <div>
+            <h3>Ricerca di controparti elettromagnetiche a eventi di onde gravitazionali con array robotici</h3>
+            <p class="authors">Contarini, G.; Terenzi, M.; et al.</p>
+            <p class="meta">Monthly Notices of the Royal Astronomical Society · arXiv:2025.19832</p>
+          </div>
+        </div>
+        <div class="pub-item">
+          <span class="year">2025</span>
+          <div>
+            <h3>Caratterizzazione atmosferica di un pianeta sub-nettuniano mediante spettroscopia in trasmissione</h3>
+            <p class="authors">Terenzi, M.; Bruno, A.</p>
+            <p class="meta">Astronomy &amp; Astrophysics · arXiv:2025.15207</p>
+          </div>
+        </div>
+        <div class="pub-item">
+          <span class="year">2025</span>
+          <div>
+            <h3>Asterosismologia di un campione di giganti rosse in ammassi globulari galattici</h3>
+            <p class="authors">Bruno, A.; Valli, S.</p>
+            <p class="meta">The Astrophysical Journal Supplement Series · arXiv:2025.09944</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEMINARI ============ -->
+  <section id="seminari">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="index">05</span>
+        <div>
+          <h2>Seminari ed eventi</h2>
+          <p class="desc">Il ciclo di seminari dipartimentali è aperto a studenti, dottorandi e visitatori.</p>
+        </div>
+      </div>
+
+      <div class="seminar-list">
+        <div class="seminar-item">
+          <span class="seminar-date">14 ottobre, ore 15:00, Aula Seminari</span>
+          <div>
+            <h3>Popolazioni stellari nelle prime galassie: cosa ci dice JWST</h3>
+            <p>Seminario a invito su formazione stellare ad alto redshift, con discussione dei dati più recenti.</p>
+          </div>
+        </div>
+        <div class="seminar-item">
+          <span class="seminar-date">28 ottobre, ore 11:00, Aula Seminari</span>
+          <div>
+            <h3>Metodi bayesiani per l'inferenza di parametri cosmologici</h3>
+            <p>Seminario metodologico rivolto principalmente a dottorandi e assegnisti.</p>
+          </div>
+        </div>
+        <div class="seminar-item">
+          <span class="seminar-date">11 novembre, ore 15:00, Aula Seminari</span>
+          <div>
+            <h3>Presentazione dei progetti di dottorato del terzo anno</h3>
+            <p>Giornata dipartimentale aperta a tutti i membri del dipartimento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTATTI ============ -->
+  <section id="contatti" class="contact-section">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div>
+          <h2>Vieni a trovarci, o scrivici</h2>
+          <p class="desc">Per informazioni su dottorato, tesi e collaborazioni, contatta la segreteria didattica o il gruppo di ricerca di tuo interesse.</p>
+        </div>
+        <dl class="contact-details">
+          <dt>Indirizzo</dt>
+          <dd>Via degli Osservatori 12, 40100 Cassiopea (CS)</dd>
+          <dt>Segreteria didattica</dt>
+          <dd><a href="mailto:didattica.astrofisica@unicassiopea.it">didattica.astrofisica@unicassiopea.it</a></dd>
+          <dt>Direzione di dipartimento</dt>
+          <dd><a href="mailto:direzione.astrofisica@unicassiopea.it">direzione.astrofisica@unicassiopea.it</a></dd>
+          <dt>Telefono</dt>
+          <dd>+39 051 000 0000</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> Dipartimento di Astrofisica, Università di Cassiopea</span>
+    <span>Sito costruito con HTML e CSS</span>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="js/main.js"></script>
+</body>
+</html>
