@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Baricentro Traslochi – traslochi a traiettoria calcolata</title>
+<meta name="description" content="Baricentro è un'impresa di traslochi fondata da astrofisici. Calcoliamo masse, volumi e traiettorie prima di caricare la prima scatola.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --space:#101A3A;
+    --space-deep:#0A1129;
+    --box:#D39A55;
+    --ice:#9DB4DE;
+    --star:#F2F5FF;
+
+    --bg:#EDF0F5;
+    --surface:#FFFFFF;
+    --ink:#101A3A;
+    --muted:#4A5573;
+    --line:#C7CEDF;
+    --accent:#94550F;
+    color-scheme: light;
+
+    --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+    --text:"Newsreader",Georgia,"Times New Roman",serif;
+
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    background:var(--space);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1229;
+      --surface:#121C3F;
+      --ink:#E6EBF7;
+      --muted:#A0ABCA;
+      --line:#28336A;
+      --accent:#E0AE6F;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1229;
+    --surface:#121C3F;
+    --ink:#E6EBF7;
+    --muted:#A0ABCA;
+    --line:#28336A;
+    --accent:#E0AE6F;
+    color-scheme: dark;
+  }
+  html{ scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px); scroll-behavior:smooth; }
+  *,*::before,*::after{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--text);
+    font-size:1.125rem;
+    line-height:1.6;
+    -webkit-text-size-adjust:100%;
+  }
+  h1,h2,h3{ font-family:var(--display); margin:0; line-height:1.05; letter-spacing:-0.015em; }
+  p{ margin:0 0 1em; }
+  a{ color:inherit; }
+  img,svg{ max-width:100%; }
+  :focus-visible{ outline:3px solid var(--box); outline-offset:3px; }
+
+  .wrap{
+    max-width:1140px; margin:0 auto;
+    padding-left:max(22px,env(safe-area-inset-left,0px));
+    padding-right:max(22px,env(safe-area-inset-right,0px));
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:.8em 1.35em; border-radius:4px; border:2px solid var(--box);
+    background:var(--box); color:var(--space);
+    font-family:var(--display); font-weight:700; font-size:1rem; letter-spacing:.005em;
+    text-decoration:none; cursor:pointer; line-height:1.1;
+  }
+  .btn:hover{ background:#E2AE6D; border-color:#E2AE6D; }
+  .btn.ghost{ background:transparent; color:inherit; border-color:currentColor; }
+  .btn.ghost:hover{ background:rgba(255,255,255,.08); }
+  .btn.sm{ padding:.6em 1em; font-size:.95rem; }
+
+  /* ---------- Header ---------- */
+  .site-header{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    background:var(--space); color:var(--star);
+    border-bottom:1px solid rgba(255,255,255,.09);
+  }
+  .bar{ display:flex; align-items:center; gap:28px; height:64px; }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none;
+    font-family:var(--display); font-weight:800; font-size:1.25rem; letter-spacing:-.01em; }
+  .site-header nav{ margin-left:auto; display:flex; gap:26px; }
+  .site-header nav a{ text-decoration:none; font-family:var(--display); font-weight:500; font-size:.98rem; color:#C9D3EC; }
+  .site-header nav a:hover{ color:#fff; }
+  @media (max-width:860px){
+    .site-header nav{ display:none; }
+    .bar .btn{ margin-left:auto; }
+  }
+
+  /* ---------- Hero ---------- */
+  .on-space{
+    --ink:#E6EBF7; --muted:#A9B4D2; --line:#2C3870; --accent:#E0AE6F;
+    background:var(--space); color:var(--ink);
+  }
+  .hero{ padding:56px 0 72px; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.02fr 1fr; gap:40px; align-items:center; }
+  .hero h1{
+    font-size:clamp(2.5rem,6.2vw,4.7rem); font-weight:800; font-stretch:82%;
+    font-variation-settings:"opsz" 96; letter-spacing:-.025em; text-wrap:balance;
+  }
+  .lead{ font-size:1.25rem; color:#C3CCE6; max-width:34em; margin:26px 0 30px; }
+  .cta-row{ display:flex; flex-wrap:wrap; gap:14px; }
+  .hero-note{ margin:22px 0 0; font-size:.98rem; color:var(--muted); }
+  .orbit{ margin:0; }
+  .orbit svg{ display:block; width:100%; height:auto; }
+  .orbit figcaption{ font-size:.92rem; font-style:italic; color:var(--muted); margin-top:8px; max-width:38em; }
+  .o-ring{ fill:none; stroke:#9DB4DE; stroke-opacity:.28; stroke-width:1; }
+  .o-transfer{ fill:none; stroke:#D39A55; stroke-opacity:.35; stroke-width:1; stroke-dasharray:3 6; }
+  .o-trail{ fill:none; stroke:#D39A55; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+  .o-label{ font-family:var(--display); font-size:14px; font-weight:600; fill:#E6EBF7; }
+  .o-sub{ font-family:var(--text); font-style:italic; font-size:13px; fill:#9DB4DE; }
+  .o-read{ font-family:var(--display); font-size:14px; font-weight:500; fill:#D39A55; }
+  @media (max-width:940px){
+    .hero{ padding:36px 0 56px; }
+    .hero-grid{ grid-template-columns:1fr; gap:36px; }
+  }
+
+  /* ---------- Sections ---------- */
+  .section{ padding:96px 0; background:var(--bg); }
+  .section.alt{ background:var(--surface); }
+  .split{ display:grid; grid-template-columns:minmax(200px,290px) 1fr; gap:56px; }
+  .rail h2, .sec-title{
+    font-size:clamp(1.9rem,3.6vw,2.7rem); font-weight:700; font-stretch:88%; letter-spacing:-.02em;
+  }
+  .rail p{ margin-top:16px; color:var(--muted); font-size:1.02rem; }
+  .sec-lead{ color:var(--muted); max-width:40em; margin:16px 0 0; }
+  @media (max-width:860px){
+    .section{ padding:64px 0; }
+    .split{ grid-template-columns:1fr; gap:28px; }
+  }
+
+  /* ---------- Servizi table ---------- */
+  table{ width:100%; border-collapse:collapse; }
+  th{ text-align:left; font-family:var(--display); font-weight:600; font-size:.95rem; color:var(--muted);
+      padding:0 18px 12px 0; border-bottom:2px solid var(--ink); }
+  td{ padding:20px 18px 20px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td:first-child{ font-family:var(--display); font-weight:700; font-size:1.12rem; width:26%; line-height:1.2; }
+  td.astro{ font-style:italic; color:var(--accent); width:26%; }
+  .table-scroll{ overflow-x:auto; }
+  @media (max-width:720px){
+    .svc thead{ display:none; }
+    .svc tr, .svc td{ display:block; width:auto !important; }
+    .svc tr{ padding:18px 0; border-bottom:1px solid var(--line); }
+    .svc td{ padding:0; border:0; }
+    .svc td:first-child{ margin-bottom:6px; font-size:1.15rem; }
+    .svc td.astro{ margin-top:8px; }
+    .svc td.astro::before{ content:"In astrofisica: "; font-style:normal; color:var(--muted); }
+  }
+
+  /* ---------- Metodo ---------- */
+  .metodo{ padding:96px 0; }
+  .metodo h2{ font-size:clamp(1.9rem,3.6vw,2.7rem); font-weight:700; font-stretch:88%; letter-spacing:-.02em; max-width:16em; }
+  .steps{ list-style:none; padding:0; margin:56px 0 0; display:grid; grid-template-columns:repeat(5,1fr); gap:28px; counter-reset:step; }
+  .steps li{ position:relative; padding-top:52px; counter-increment:step; }
+  .steps li::before{
+    content:counter(step); position:absolute; top:0; left:0; width:36px; height:36px; border-radius:50%;
+    background:var(--box); color:var(--space); display:grid; place-items:center;
+    font-family:var(--display); font-weight:800; font-size:1.05rem;
+  }
+  .steps li::after{
+    content:""; position:absolute; top:17px; left:48px; right:-16px; height:2px;
+    background:repeating-linear-gradient(90deg,#4B5A99 0 6px,transparent 6px 12px);
+  }
+  .steps li:last-child::after{ display:none; }
+  .steps h3{ font-size:1.3rem; font-weight:700; margin-bottom:8px; font-stretch:92%; }
+  .steps p{ font-size:1rem; color:#B9C3DE; margin:0; }
+  @media (max-width:940px){
+    .metodo{ padding:64px 0; }
+    .steps{ grid-template-columns:1fr; gap:0; margin-top:36px; }
+    .steps li{ padding:2px 0 34px 56px; }
+    .steps li::after{ top:42px; bottom:6px; left:17px; right:auto; width:2px; height:auto;
+      background:repeating-linear-gradient(180deg,#4B5A99 0 6px,transparent 6px 12px); }
+  }
+
+  /* ---------- Calcolatore ---------- */
+  .calc{ display:grid; grid-template-columns:1.15fr .85fr; gap:48px; margin-top:44px; align-items:start; }
+  fieldset{ border:0; margin:0 0 30px; padding:0; min-inline-size:0; }
+  legend{ font-family:var(--display); font-weight:700; font-size:1.2rem; padding:0; margin-bottom:14px; }
+  .field{ display:block; margin-bottom:18px; }
+  .field > span, .field-label{ display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+    font-size:1rem; margin-bottom:6px; }
+  output{ font-family:var(--display); font-weight:700; color:var(--accent); }
+  input[type=range]{ width:100%; accent-color:#C0803A; height:28px; }
+  .seg{ display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+  .seg label{ cursor:pointer; }
+  .seg input{ position:absolute; opacity:0; pointer-events:none; }
+  .seg span{
+    display:inline-block; padding:.55em 1.1em; border:2px solid var(--line); border-radius:4px;
+    font-family:var(--display); font-weight:600; font-size:.98rem; background:var(--surface);
+  }
+  .seg input:checked + span{ border-color:var(--box); background:var(--box); color:var(--space); }
+  .seg input:focus-visible + span{ outline:3px solid var(--box); outline-offset:3px; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  select,input[type=text],input[type=email],input[type=date],textarea{
+    width:100%; font:inherit; font-size:1rem; color:var(--ink); background:var(--surface);
+    border:1.5px solid var(--line); border-radius:4px; padding:.6em .75em;
+  }
+  .section.alt select,.section.alt input[type=text],.section.alt input[type=email],.section.alt input[type=date],.section.alt textarea{ background:var(--bg); }
+  select{ margin-top:2px; }
+  .check{ display:flex; gap:10px; align-items:center; font-size:1rem; margin:0 0 10px; cursor:pointer; }
+  .check input{ width:20px; height:20px; accent-color:#C0803A; flex:none; }
+  .result{
+    position:sticky; top:calc(env(safe-area-inset-top,0px) + 84px);
+    background:var(--space); color:#E6EBF7; border-radius:8px; padding:30px; border:1px solid var(--line);
+  }
+  .result h3{ font-size:1rem; font-weight:600; color:#A9B4D2; font-stretch:100%; letter-spacing:0; }
+  .price{ font-family:var(--display); font-weight:800; font-size:clamp(2rem,4vw,2.9rem); color:var(--box);
+    line-height:1.05; margin:8px 0 22px; font-stretch:88%; letter-spacing:-.02em; }
+  .result dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:0; }
+  .result dt,.result dd{ padding:11px 0; border-top:1px solid #2C3870; margin:0; font-size:1rem; }
+  .result dt{ color:#A9B4D2; padding-right:20px; }
+  .result dd{ text-align:right; font-family:var(--display); font-weight:600; }
+  .result .fine{ font-size:.9rem; color:#A9B4D2; margin:18px 0 0; }
+  @media (max-width:940px){
+    .calc{ grid-template-columns:1fr; gap:12px; }
+    .result{ position:static; }
+  }
+  @media (max-width:520px){ .two{ grid-template-columns:1fr; } }
+
+  .request{ margin-top:64px; padding-top:48px; border-top:2px solid var(--ink); display:grid; grid-template-columns:minmax(200px,290px) 1fr; gap:56px; }
+  .request h3{ font-size:1.7rem; font-weight:700; font-stretch:90%; }
+  .request .rail-p{ color:var(--muted); font-size:1.02rem; margin-top:14px; }
+  textarea{ resize:vertical; line-height:1.45; }
+  #summary{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.85rem; }
+  .actions{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:6px 0 18px; }
+  #copyStatus{ font-size:.95rem; color:var(--muted); }
+  @media (max-width:860px){ .request{ grid-template-columns:1fr; gap:24px; } }
+
+  /* ---------- Registro ---------- */
+  .log td:first-child{ width:34%; }
+  .log td.num{ white-space:nowrap; }
+  .log td:last-child{ font-style:italic; }
+  .log caption{ text-align:left; font-size:.92rem; color:var(--muted); font-style:italic; padding-top:14px; caption-side:bottom; }
+
+  /* ---------- Team ---------- */
+  .about-copy p{ font-size:1.2rem; max-width:36em; }
+  .team{ list-style:none; margin:36px 0 0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:0 40px; }
+  .team li{ display:grid; grid-template-columns:56px 1fr; gap:16px; padding:22px 0; border-top:1px solid var(--line); }
+  .mono{
+    width:56px; height:56px; border-radius:50%; background:var(--space); color:var(--box);
+    display:grid; place-items:center; font-family:var(--display); font-weight:800; font-size:1.15rem;
+    border:2px solid var(--box);
+  }
+  .team h3{ font-size:1.2rem; font-weight:700; font-stretch:92%; }
+  .team .field-of{ display:block; font-style:italic; color:var(--accent); font-size:.98rem; margin:2px 0 6px; }
+  .team p{ margin:0; font-size:1rem; color:var(--muted); }
+  @media (max-width:720px){ .team{ grid-template-columns:1fr; } }
+
+  /* ---------- FAQ ---------- */
+  details{ border-top:1px solid var(--line); padding:0; }
+  details:last-of-type{ border-bottom:1px solid var(--line); }
+  summary{
+    list-style:none; cursor:pointer; padding:20px 44px 20px 0; position:relative;
+    font-family:var(--display); font-weight:600; font-size:1.15rem; line-height:1.25;
+  }
+  summary::-webkit-details-marker{ display:none; }
+  summary::after{
+    content:"+"; position:absolute; right:6px; top:50%; transform:translateY(-52%);
+    font-size:1.7rem; font-weight:500; color:var(--accent);
+  }
+  details[open] summary::after{ content:"\2212"; }
+  details p{ padding:0 44px 22px 0; margin:0; color:var(--muted); max-width:38em; }
+
+  /* ---------- Footer ---------- */
+  footer{ padding:64px 0 48px; }
+  .foot{ display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; }
+  footer h2{ font-size:1.05rem; font-weight:600; color:#A9B4D2; margin-bottom:12px; letter-spacing:0; font-stretch:100%; }
+  footer p{ margin:0 0 6px; font-size:1rem; }
+  footer .brand{ margin-bottom:14px; }
+  .legal{ margin-top:44px; padding-top:22px; border-top:1px solid #2C3870; font-size:.92rem; color:#A9B4D2; font-style:italic; }
+  @media (max-width:760px){ .foot{ grid-template-columns:1fr; gap:28px; } }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Baricentro Traslochi, vai all'inizio">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+        <ellipse cx="16" cy="16" rx="13.5" ry="5.6" transform="rotate(-28 16 16)" fill="none" stroke="#D39A55" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="3.2" fill="#9DB4DE"/>
+        <circle cx="26.2" cy="10.2" r="2.4" fill="#D39A55"/>
+      </svg>
+      <span>Baricentro</span>
+    </a>
+    <nav aria-label="Principale">
+      <a href="#servizi">Servizi</a>
+      <a href="#metodo">Metodo</a>
+      <a href="#preventivo">Preventivo</a>
+      <a href="#missioni">Missioni</a>
+      <a href="#team">Team</a>
+      <a href="#faq">Domande</a>
+    </nav>
+    <a class="btn sm" href="#preventivo">Preventivo</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero on-space">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Sappiamo esattamente dove atterrerà il vostro divano.</h1>
+      <p class="lead">Baricentro è un'impresa di traslochi fondata da cinque astrofisici. Calcoliamo masse, volumi e traiettorie prima di caricare la prima scatola, così il giorno del trasloco nulla è lasciato al caso.</p>
+      <div class="cta-row">
+        <a class="btn" href="#preventivo">Calcola il preventivo</a>
+        <a class="btn ghost" href="#metodo">Come lavoriamo</a>
+      </div>
+      <p class="hero-note">Sopralluogo gratuito in video. Preventivo scritto entro 24 ore.</p>
+    </div>
+
+    <figure class="orbit">
+      <svg id="orbit" viewBox="0 0 560 460" role="img" aria-labelledby="orbit-t orbit-d">
+        <title id="orbit-t">Trasferimento orbitale di una scatola da casa vecchia a casa nuova</title>
+        <desc id="orbit-d">Una scatola parte da un'orbita interna, chiamata Via Roma 12, e raggiunge un'orbita esterna, Via Verdi 40, lungo un'ellisse di trasferimento. Vicino a casa vecchia va più veloce, arrivando rallenta.</desc>
+        <g id="stars"></g>
+        <circle class="o-ring" cx="250" cy="230" r="90"/>
+        <circle class="o-ring" cx="250" cy="230" r="190"/>
+        <ellipse class="o-transfer" cx="300" cy="230" rx="140" ry="130.77"/>
+        <path id="trail" class="o-trail" d="M160 230"/>
+
+        <!-- baricentro -->
+        <g stroke="#9DB4DE" stroke-opacity=".8" stroke-width="1.2" fill="none">
+          <circle cx="250" cy="230" r="4.5"/>
+          <path d="M250 218v8M250 234v8M238 230h8M254 230h8"/>
+        </g>
+        <text class="o-sub" x="250" y="262" text-anchor="middle" font-size="12">baricentro</text>
+
+        <!-- origine -->
+        <circle cx="160" cy="230" r="6" fill="#9DB4DE"/>
+        <text class="o-label" x="146" y="226" text-anchor="end">Via Roma 12</text>
+        <text class="o-sub" x="146" y="244" text-anchor="end">partenza</text>
+
+        <!-- destinazione -->
+        <circle cx="440" cy="230" r="9" fill="none" stroke="#D39A55" stroke-width="2"/>
+        <circle cx="440" cy="230" r="3.5" fill="#D39A55"/>
+        <text class="o-label" x="456" y="226">Via Verdi 40</text>
+        <text class="o-sub" x="456" y="244">arrivo</text>
+
+        <!-- scatola -->
+        <g id="box" transform="translate(160 230)">
+          <rect x="-9" y="-8" width="18" height="16" rx="1.5" fill="#D39A55"/>
+          <rect x="-2" y="-8" width="4" height="16" fill="#9C6528"/>
+          <rect x="-9" y="-8" width="18" height="3" rx="1" fill="#E7B677"/>
+        </g>
+
+        <text id="readout" class="o-read" x="24" y="436">velocità 1,17 × v₀</text>
+      </svg>
+      <figcaption>Fig. 1. Trasferimento tra due orbite. La scatola corre vicino a casa vecchia e rallenta all'arrivo (v₀ è la velocità sull'orbita di partenza). Noi, in compenso, vi diamo un orario preciso.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- SERVIZI -->
+<section class="section" id="servizi">
+  <div class="wrap split">
+    <div class="rail">
+      <h2>Servizi</h2>
+      <p>Ogni trasloco è un problema di massa, volume e vincoli geometrici. Cambia solo la scala.</p>
+    </div>
+    <div>
+      <table class="svc">
+        <thead>
+          <tr><th scope="col">Servizio</th><th scope="col">Cosa include</th><th scope="col">In astrofisica</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Trasloco locale</td>
+            <td>Casa o ufficio nella stessa città o provincia. Squadra, mezzo, carico e scarico in giornata.</td>
+            <td class="astro">Orbita bassa</td>
+          </tr>
+          <tr>
+            <td>Lunga distanza</td>
+            <td>Tutta Italia e Europa, con un solo carico dal punto A al punto B e aggiornamenti durante il viaggio.</td>
+            <td class="astro">Trasferimento interplanetario</td>
+          </tr>
+          <tr>
+            <td>Imballaggio e smontaggio</td>
+            <td>Scatole pesate ed etichettate stanza per stanza. Smontiamo e rimontiamo mobili e librerie.</td>
+            <td class="astro">Conservazione della massa</td>
+          </tr>
+          <tr>
+            <td>Deposito temporaneo</td>
+            <td>Magazzino asciutto e sorvegliato per settimane o mesi, se le date dei due contratti non coincidono.</td>
+            <td class="astro">Orbita di parcheggio</td>
+          </tr>
+          <tr>
+            <td>Oggetti pesanti</td>
+            <td>Pianoforti, casseforti e arredi voluminosi, con paranco, cinghie e, se serve, gru dalla finestra.</td>
+            <td class="astro">Corpi ad alta densità</td>
+          </tr>
+          <tr>
+            <td>Strumenti delicati</td>
+            <td>Telescopi, opere d'arte, strumentazione da laboratorio. Casse su misura e trasporto con ammortizzazione.</td>
+            <td class="astro">Ottica di precisione</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- METODO -->
+<section class="metodo on-space" id="metodo">
+  <div class="wrap">
+    <h2>Un piano di volo prima di ogni trasloco</h2>
+    <ol class="steps">
+      <li>
+        <h3>Sopralluogo</h3>
+        <p>In video, in dieci minuti, o di persona. Misuriamo volumi, corridoi e angoli delle scale.</p>
+      </li>
+      <li>
+        <h3>Modello</h3>
+        <p>Calcoliamo massa e volume e disegniamo il piano di carico: cosa sale per primo, cosa per ultimo.</p>
+      </li>
+      <li>
+        <h3>Carico</h3>
+        <p>Pesi in basso, fragili in alto, niente che possa scivolare. Ogni oggetto ha una posizione stabile.</p>
+      </li>
+      <li>
+        <h3>Trasferimento</h3>
+        <p>Partenza all'ora concordata, un solo mezzo dal punto A al punto B, aggiornamenti al telefono.</p>
+      </li>
+      <li>
+        <h3>Atterraggio</h3>
+        <p>Posa in ogni stanza secondo la planimetria, rimontaggio dei mobili, ritiro degli imballaggi.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- PREVENTIVO -->
+<section class="section alt" id="preventivo">
+  <div class="wrap">
+    <h2 class="sec-title">Calcola la tua traiettoria</h2>
+    <p class="sec-lead">Rispondi a poche domande e ottieni subito una stima. Il preventivo definitivo arriva dopo il sopralluogo.</p>
+
+    <div class="calc">
+      <form id="calc" autocomplete="off">
+        <fieldset>
+          <legend>Cosa spostiamo</legend>
+          <div class="seg" role="radiogroup" aria-label="Tipo di trasloco">
+            <label><input type="radio" name="tipo" value="casa" checked><span>Casa</span></label>
+            <label><input type="radio" name="tipo" value="ufficio"><span>Ufficio</span></label>
+          </div>
+          <label class="field">
+            <span>Numero di locali <output id="roomsOut">3</output></span>
+            <input type="range" id="rooms" min="1" max="10" step="1" value="3">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Da dove a dove</legend>
+          <label class="field">
+            <span>Distanza tra le due sedi <output id="kmOut">25 km</output></span>
+            <input type="range" id="km" min="1" max="1500" step="1" value="25">
+          </label>
+          <div class="two">
+            <label class="field"><span class="field-label">Piano di partenza</span>
+              <select id="floorFrom">
+                <option value="0">Piano terra</option>
+                <option value="1">1° piano</option>
+                <option value="2" selected>2° piano</option>
+                <option value="3">3° piano</option>
+                <option value="4">4° piano</option>
+                <option value="5">5° piano o più</option>
+              </select>
+            </label>
+            <label class="field"><span class="field-label">Piano di arrivo</span>
+              <select id="floorTo">
+                <option value="0" selected>Piano terra</option>
+                <option value="1">1° piano</option>
+                <option value="2">2° piano</option>
+                <option value="3">3° piano</option>
+                <option value="4">4° piano</option>
+                <option value="5">5° piano o più</option>
+              </select>
+            </label>
+          </div>
+          <label class="check"><input type="checkbox" id="liftFrom"> Ascensore in partenza</label>
+          <label class="check"><input type="checkbox" id="liftTo"> Ascensore in arrivo</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Servizi extra</legend>
+          <label class="check"><input type="checkbox" id="pack"> Imballaggio completo</label>
+          <label class="check"><input type="checkbox" id="assemble"> Smontaggio e rimontaggio mobili</label>
+          <label class="check"><input type="checkbox" id="heavy"> Oggetto molto pesante (pianoforte, cassaforte)</label>
+        </fieldset>
+      </form>
+
+      <aside class="result" aria-live="polite" aria-label="Stima del trasloco">
+        <h3>Costo indicativo</h3>
+        <p class="price" id="price">€ 0</p>
+        <dl>
+          <dt>Massa da spostare</dt><dd id="rMass">–</dd>
+          <dt>Volume</dt><dd id="rVol">–</dd>
+          <dt>Squadra</dt><dd id="rCrew">–</dd>
+          <dt>Mezzi</dt><dd id="rTruck">–</dd>
+          <dt>Durata</dt><dd id="rTime">–</dd>
+        </dl>
+        <p class="fine">Stima non vincolante, basata su valori medi. Scale, accessi e ingombri reali possono cambiarla.</p>
+      </aside>
+    </div>
+
+    <div class="request">
+      <div>
+        <h3>Invia la richiesta</h3>
+        <p class="rail-p">Compila i tuoi dati e mandaci il riepilogo. Ti rispondiamo con un preventivo scritto entro 24 ore.</p>
+      </div>
+      <div>
+        <div class="two">
+          <label class="field"><span class="field-label">Nome e cognome</span><input type="text" id="cName" autocomplete="name"></label>
+          <label class="field"><span class="field-label">Telefono o email</span><input type="text" id="cContact" autocomplete="email"></label>
+        </div>
+        <label class="field"><span class="field-label">Data desiderata</span><input type="date" id="cDate"></label>
+        <label class="field"><span class="field-label">Note (accessi, oggetti particolari, ZTL)</span><textarea id="cNotes" rows="3"></textarea></label>
+        <label class="field"><span class="field-label">Riepilogo della richiesta</span><textarea id="summary" rows="11" readonly></textarea></label>
+        <div class="actions">
+          <a class="btn" id="mailBtn" href="mailto:preventivi@baricentrotraslochi.example">Invia per email</a>
+          <button type="button" class="btn ghost" id="copyBtn" style="color:var(--ink)">Copia riepilogo</button>
+          <span id="copyStatus" role="status"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSIONI -->
+<section class="section" id="missioni">
+  <div class="wrap split">
+    <div class="rail">
+      <h2>Registro delle missioni</h2>
+      <p>Alcuni dei carichi più interessanti degli ultimi anni.</p>
+    </div>
+    <div class="table-scroll">
+      <table class="log">
+        <caption>Esempi di missioni, con dati di presentazione.</caption>
+        <thead>
+          <tr><th scope="col">Missione</th><th scope="col">Percorso</th><th scope="col">Carico</th><th scope="col">Esito</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Bilocale al quarto piano, senza ascensore</td><td class="num">Bologna → Torino, 340 km</td><td class="num">2,1 t</td><td>Consegnato in giornata, graffi: 0</td></tr>
+          <tr><td>Pianoforte a coda, scala a chiocciola</td><td class="num">Verona, 6 km</td><td class="num">310 kg</td><td>Passato dalla finestra con la gru</td></tr>
+          <tr><td>Studio di architettura, 12 postazioni</td><td class="num">Roma, 11 km</td><td class="num">4,8 t</td><td>Riaperto il lunedì mattina</td></tr>
+          <tr><td>Telescopio Newton da 250 mm</td><td class="num">Padova → Asiago, 65 km</td><td class="num">48 kg</td><td>Collimazione preservata</td></tr>
+          <tr><td>Casa di famiglia, nove locali</td><td class="num">Firenze → Lione, 780 km</td><td class="num">14 t</td><td>Due giorni, un solo mezzo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section alt" id="team">
+  <div class="wrap split">
+    <div class="rail">
+      <h2>Perché degli astrofisici fanno traslochi</h2>
+    </div>
+    <div>
+      <div class="about-copy">
+        <p>Ci siamo conosciuti in un dipartimento di fisica, tra simulazioni di ammassi di galassie e turni notturni al telescopio. Quando uno di noi ha traslocato e ha visto un armadio incastrarsi sul pianerottolo, abbiamo capito che il problema era interessante: vincoli geometrici, centro di massa, attrito.</p>
+        <p>Poi abbiamo capito che era anche molto richiesto.</p>
+      </div>
+      <ul class="team">
+        <li>
+          <div class="mono" aria-hidden="true">EM</div>
+          <div>
+            <h3>Elena Marchetti</h3>
+            <span class="field-of">Cosmologia</span>
+            <p>Coordina i sopralluoghi e disegna il piano di carico. Il suo piano di carico è più stabile di molte orbite.</p>
+          </div>
+        </li>
+        <li>
+          <div class="mono" aria-hidden="true">MF</div>
+          <div>
+            <h3>Matteo Ferraro</h3>
+            <span class="field-of">Dinamica stellare</span>
+            <p>Guida le squadre sul campo. Sa quanto pesa una libreria prima ancora di vederla.</p>
+          </div>
+        </li>
+        <li>
+          <div class="mono" aria-hidden="true">CB</div>
+          <div>
+            <h3>Chiara Bellini</h3>
+            <span class="field-of">Radioastronomia</span>
+            <p>Cura imballaggi e comunicazioni. Ogni scatola ha la sua etichetta, ogni cliente il suo aggiornamento.</p>
+          </div>
+        </li>
+        <li>
+          <div class="mono" aria-hidden="true">AR</div>
+          <div>
+            <h3>Andrea Russo</h3>
+            <span class="field-of">Relatività</span>
+            <p>Si occupa di pianoforti e passaggi stretti. Per lui una scala a chiocciola è una geodetica.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap split">
+    <div class="rail">
+      <h2>Domande frequenti</h2>
+      <p>Non trovi la tua? Scrivici, rispondiamo di solito in giornata.</p>
+    </div>
+    <div>
+      <details>
+        <summary>Quanto tempo prima devo prenotare?</summary>
+        <p>Di norma due o tre settimane. A fine mese e in estate conviene muoversi con quattro o sei settimane di anticipo, perché sono i periodi più richiesti.</p>
+      </details>
+      <details>
+        <summary>I miei oggetti sono assicurati durante il trasloco?</summary>
+        <p>Sì. Il trasporto è coperto da una polizza per i danni alle cose trasportate. Massimale e condizioni sono indicati nel preventivo scritto.</p>
+      </details>
+      <details>
+        <summary>Lavorate anche nel weekend?</summary>
+        <p>Sì, sabato e domenica su prenotazione. Indicaci la data desiderata nella richiesta e ti diciamo subito se abbiamo una squadra libera.</p>
+      </details>
+      <details>
+        <summary>E se il giorno del trasloco piove?</summary>
+        <p>Il carico è protetto da teli e coperte imbottite, e il percorso dal portone al mezzo è coperto da protezioni antiscivolo. La pioggia non cambia il piano.</p>
+      </details>
+      <details>
+        <summary>Fate traslochi all'estero?</summary>
+        <p>Sì, in tutta Europa. Per i trasferimenti internazionali ci occupiamo anche dell'elenco dei beni per la dogana, quando serve.</p>
+      </details>
+      <details>
+        <summary>Perché vi chiamate Baricentro?</summary>
+        <p>Il baricentro è il punto attorno al quale ruotano due corpi. Nel nostro caso, la vostra casa vecchia e quella nuova.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="on-space">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top">
+          <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+            <ellipse cx="16" cy="16" rx="13.5" ry="5.6" transform="rotate(-28 16 16)" fill="none" stroke="#D39A55" stroke-width="1.6"/>
+            <circle cx="16" cy="16" r="3.2" fill="#9DB4DE"/>
+            <circle cx="26.2" cy="10.2" r="2.4" fill="#D39A55"/>
+          </svg>
+          <span>Baricentro Traslochi</span>
+        </a>
+        <p>Traslochi a traiettoria calcolata.</p>
+      </div>
+      <div>
+        <h2>Contatti</h2>
+        <p>preventivi@baricentrotraslochi.example</p>
+        <p>+39 000 000 0000</p>
+        <p>Lunedì–sabato, 8:00–19:00</p>
+      </div>
+      <div>
+        <h2>Sede</h2>
+        <p>Via dei Pianeti 1</p>
+        <p>00000 Città</p>
+        <p>P. IVA 00000000000</p>
+      </div>
+    </div>
+    <p class="legend legal">Nessuna scatola è stata danneggiata nella realizzazione di questo sito.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- Hero: stelle + trasferimento orbitale ---------- */
+  function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var r = rng(42), s = '';
+  for (var i=0;i<95;i++){
+    var x=r()*560, y=r()*460, big=r()<0.12, rad=big?1.5:(r()*0.9+0.4), o=(r()*0.6+0.25).toFixed(2);
+    s += '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rad.toFixed(2)+'" fill="#F2F5FF" opacity="'+o+'"/>';
+  }
+  document.getElementById('stars').innerHTML = s;
+
+  var fx=250, cy=230, a=140, c=50, e=c/a, b=Math.sqrt(a*a-c*c), rp=90;
+  var boxEl=document.getElementById('box'), trail=document.getElementById('trail'), readout=document.getElementById('readout');
+
+  function kepler(M){ var E=M; for(var i=0;i<8;i++){ E -= (E - e*Math.sin(E) - M)/(1 - e*Math.cos(E)); } return E; }
+  function pos(E){ return [fx - a*(Math.cos(E)-e), cy + b*Math.sin(E)]; }
+  function speed(E){ var rr=a*(1-e*Math.cos(E)); return Math.sqrt(rp*(2/rr - 1/a)); }
+
+  function draw(E, arrived){
+    var p=pos(E);
+    boxEl.setAttribute('transform','translate('+p[0].toFixed(1)+' '+p[1].toFixed(1)+')');
+    var start=pos(0), d='M'+start[0].toFixed(1)+' '+start[1].toFixed(1);
+    var n=Math.max(1, Math.ceil(E/Math.PI*120));
+    for(var k=1;k<=n;k++){ var q=pos(Math.min(E,k*Math.PI/120)); d+=' L'+q[0].toFixed(1)+' '+q[1].toFixed(1); }
+    trail.setAttribute('d', d);
+    readout.textContent = arrived ? 'Consegnato. Graffi: 0' : 'velocità '+speed(E).toFixed(2).replace('.',',')+' × v₀';
+  }
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce){
+    draw(kepler(Math.PI*0.6), false);
+  } else {
+    var T_MOVE=9000, T_HOLD=2600, t0=null;
+    (function tick(now){
+      if(t0===null) t0=now;
+      var t=(now-t0)%(T_MOVE+T_HOLD);
+      if(t<T_MOVE){ draw(kepler(Math.PI*(t/T_MOVE)), false); }
+      else { draw(Math.PI, true); }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  /* ---------- Calcolatore ---------- */
+  function $(id){ return document.getElementById(id); }
+  function nf(n, d){ return n.toLocaleString('it-IT', {minimumFractionDigits:d||0, maximumFractionDigits:d||0}); }
+  var state = {};
+
+  function calc(){
+    var type = document.querySelector('input[name="tipo"]:checked').value;
+    var rooms = +$('rooms').value, km = +$('km').value;
+    var fFrom = +$('floorFrom').value, fTo = +$('floorTo').value;
+    var liftFrom = $('liftFrom').checked, liftTo = $('liftTo').checked;
+    var pack = $('pack').checked, assemble = $('assemble').checked, heavy = $('heavy').checked;
+
+    $('roomsOut').textContent = rooms;
+    $('kmOut').textContent = nf(km) + ' km';
+
+    var volume = rooms * (type==='casa' ? 10 : 8);
+    var massKg = Math.round(volume*180/100)*100;
+    var crew = Math.min(8, Math.max(2, Math.ceil(volume/15)+1));
+    var trucks = Math.ceil(volume/40);
+    var fill = Math.round(volume/(trucks*40)*100);
+
+    var stairs = (liftFrom?0.02:0.07)*fFrom + (liftTo?0.02:0.07)*fTo;
+    var factor = 1 + stairs + (pack?0.4:0) + (assemble?0.25:0);
+    var personHours = volume*0.75*factor;
+    var hours = personHours/crew + km/70;
+    hours = Math.max(2, Math.round(hours*2)/2);
+
+    var cost = personHours*26 + 90 + km*1.3 + (pack?volume*7:0) + (heavy?280:0);
+    cost = Math.max(250, cost);
+    var lo = Math.round(cost*0.88/10)*10, hi = Math.round(cost*1.14/10)*10;
+
+    var timeTxt = 'circa ' + nf(hours, hours%1?1:0) + ' h';
+    if (hours>10 || km>400) timeTxt += ', su due giorni';
+
+    $('price').textContent = '€ ' + nf(lo) + ' – ' + nf(hi);
+    $('rMass').textContent = nf(massKg/1000, 1) + ' t';
+    $('rVol').textContent = nf(volume) + ' m³';
+    $('rCrew').textContent = crew + ' operatori';
+    $('rTruck').textContent = trucks + (trucks>1?' mezzi':' mezzo') + ' (' + fill + '% pieno)';
+    $('rTime').textContent = timeTxt;
+
+    state = {type:type, rooms:rooms, volume:volume, massKg:massKg, km:km, fFrom:fFrom, fTo:fTo,
+             liftFrom:liftFrom, liftTo:liftTo, pack:pack, assemble:assemble, heavy:heavy,
+             lo:lo, hi:hi, crew:crew, timeTxt:timeTxt};
+    buildSummary();
+  }
+
+  function floorTxt(f, lift){
+    var base = f===0 ? 'piano terra' : (f===5 ? '5° piano o più' : f+'° piano');
+    return f===0 ? base : base + (lift ? ', con ascensore' : ', senza ascensore');
+  }
+
+  function buildSummary(){
+    var extras = [];
+    if(state.pack) extras.push('imballaggio completo');
+    if(state.assemble) extras.push('smontaggio e rimontaggio mobili');
+    if(state.heavy) extras.push('oggetto molto pesante');
+    var lines = [
+      'Richiesta di preventivo - Baricentro Traslochi',
+      '',
+      'Nome: ' + ($('cName').value || '-'),
+      'Contatto: ' + ($('cContact').value || '-'),
+      'Data desiderata: ' + ($('cDate').value || '-'),
+      '',
+      'Tipo: ' + (state.type==='casa'?'casa':'ufficio') + ', ' + state.rooms + ' locali (circa ' + state.volume + ' m3, ' + nf(state.massKg/1000,1) + ' t)',
+      'Distanza: ' + state.km + ' km',
+      'Partenza: ' + floorTxt(state.fFrom, state.liftFrom),
+      'Arrivo: ' + floorTxt(state.fTo, state.liftTo),
+      'Extra: ' + (extras.length ? extras.join(', ') : 'nessuno'),
+      'Stima: da ' + nf(state.lo) + ' a ' + nf(state.hi) + ' euro, ' + state.timeTxt,
+      '',
+      'Note: ' + ($('cNotes').value || '-')
+    ];
+    var text = lines.join('\n');
+    $('summary').value = text;
+    $('mailBtn').href = 'mailto:preventivi@baricentrotraslochi.example?subject=' +
+      encodeURIComponent('Richiesta di preventivo') + '&body=' + encodeURIComponent(text.replace(/\n/g,'\r\n'));
+  }
+
+  ['calc','cName','cContact','cDate','cNotes'].forEach(function(id){
+    var el=$(id);
+    el.addEventListener('input', calc);
+    el.addEventListener('change', calc);
+  });
+  $('calc').addEventListener('submit', function(ev){ ev.preventDefault(); });
+
+  $('copyBtn').addEventListener('click', function(){
+    var status=$('copyStatus'), ta=$('summary');
+    function fallback(){
+      ta.focus(); ta.select();
+      var ok=false; try{ ok=document.execCommand('copy'); }catch(err){}
+      status.textContent = ok ? 'Riepilogo copiato.' : 'Seleziona il testo e copialo a mano.';
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ta.value).then(function(){ status.textContent='Riepilogo copiato.'; }, fallback);
+    } else { fallback(); }
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>
